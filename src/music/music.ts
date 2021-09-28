@@ -30,15 +30,6 @@ export class music {
     if (!interaction.guildId || !interaction.channel) {
       return;
     }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
-      return;
-    }
     const subscription = subscriptions.get(interaction.guildId);
     if (
       !subscription ||
@@ -70,15 +61,6 @@ export class music {
     if (!interaction.guildId || !interaction.channel) {
       return;
     }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
-      return;
-    }
     const subscription = subscriptions.get(interaction.guildId);
     if (!subscription || !subscription.isReady()) {
       interaction.reply({
@@ -103,15 +85,6 @@ export class music {
     if (!interaction.guildId || !interaction.channel) {
       return;
     }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
-      return;
-    }
     const subscription = subscriptions.get(interaction.guildId);
     if (subscription?.isReady()) {
       subscription.delete();
@@ -130,15 +103,6 @@ export class music {
     client: Client
   ): void {
     if (!interaction.guildId || !interaction.channel) {
-      return;
-    }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
       return;
     }
     const subscription = subscriptions.get(interaction.guildId);
@@ -165,15 +129,6 @@ export class music {
     if (!interaction.guildId || !interaction.channel) {
       return;
     }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
-      return;
-    }
     const subscription = subscriptions.get(interaction.guildId);
     if (!subscription) {
       interaction.reply("Sorry, can't randomize at the moment!");
@@ -188,15 +143,6 @@ export class music {
     client: Client
   ): void {
     if (!interaction.guildId || !interaction.channel) {
-      return;
-    }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
       return;
     }
     const subscription = subscriptions.get(interaction.guildId);
@@ -259,15 +205,6 @@ export class music {
     if (!interaction.guildId || !interaction.channel) {
       return;
     }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
-      return;
-    }
     const subscription = subscriptions.get(interaction.guildId);
 
     if (!subscription || !subscription.isReady()) {
@@ -292,15 +229,6 @@ export class music {
     searchText: string
   ): Promise<void> {
     if (!interaction.guildId || !interaction.channel) {
-      return;
-    }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
       return;
     }
     const member = interaction.member as GuildMember;
@@ -466,15 +394,6 @@ export class music {
     searchText: string
   ): Promise<void> {
     if (!interaction.guildId || !interaction.channel) {
-      return;
-    }
-    if (
-      interaction.channel.id !== "503920562888769536" &&
-      interaction.guildId === "475742959585722408"
-    ) {
-      interaction.reply(
-        "> Music commands work only in <#503920562888769536> channel"
-      );
       return;
     }
     const member = interaction.member as GuildMember;
