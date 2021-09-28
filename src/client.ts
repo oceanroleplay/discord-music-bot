@@ -12,12 +12,18 @@ const client = new Client({
     Intents.FLAGS.GUILD_VOICE_STATES,
   ],
   classes: [path.join(__dirname, "music", "**/*.cmd.{ts,js}")],
-  botGuilds: [process.env.GUILD_ID ?? ""],
+  botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
   silent: true,
 });
 
-client.on("ready", () => {
-  client.initApplicationCommands({ log: { forGuild: true, forGlobal: true } });
+client.once("ready", async () => {
+  await client.initApplicationCommands({
+    guild: { log: true },
+    global: { log: true },
+  });
+  await client.initApplicationPermissions();
+
+  console.log("Bot started");
 });
 
 client.on("interactionCreate", (interaction: Interaction) => {
