@@ -17,13 +17,50 @@ export class MyQueue extends Queue {
   timeoutTimer?: NodeJS.Timeout;
   lockUpdate = false;
 
+  get playbackMilliseconds(): number {
+    const track = this.currentTrack;
+    if (
+      !track ||
+      !track.metadata.isYoutubeTrack() ||
+      !track.metadata.info.duration
+    ) {
+      return 0;
+    }
+
+    return this.toMS(track.metadata.info.duration);
+  }
+
   constructor(
     player: Player,
     guild: Guild,
     public channel?: TextBasedChannels
   ) {
     super(player, guild);
+    setInterval(() => this.updateControlMessage(), 1e4);
     // empty constructor
+  }
+
+  fromMS(duration: number): string {
+    const seconds = Math.floor((duration / 1000) % 60);
+    const minutes = Math.floor((duration / 60000) % 60);
+    const hours = Math.floor(duration / 3600000);
+    const secondsPad = `${seconds}`.padStart(2, "0");
+    const minutesPad = `${minutes}`.padStart(2, "0");
+    const hoursPad = `${hours}`.padStart(2, "0");
+    return `${hours ? `${hoursPad}:` : ""}${minutesPad}:${secondsPad}`;
+  }
+
+  toMS(duration: string): number {
+    const milliseconds =
+      duration
+        .split(":")
+        .reduceRight(
+          (prev, curr, i, arr) =>
+            prev + parseInt(curr) * Math.pow(60, arr.length - 1 - i),
+          0
+        ) * 1000;
+
+    return milliseconds ? milliseconds : 0;
   }
 
   controlsRow(): MessageActionRow[] {
@@ -40,7 +77,6 @@ export class MyQueue extends Queue {
       .setCustomId("btn-pause");
     const stopButton = new MessageButton()
       .setLabel("Stop")
-      .setDisabled(!this.isPlaying)
       .setStyle("DANGER")
       .setCustomId("btn-leave");
     const repeatButton = new MessageButton()
@@ -94,39 +130,60 @@ export class MyQueue extends Queue {
     embed.setTitle("Music Controls");
     const currentTrack = this.currentTrack;
     const nextTrack = this.nextTrack;
-    if (currentTrack) {
-      embed.addField(
-        "Now Playing" +
-          (this.size > 2 ? ` (Total: ${this.size} songs queued)` : ""),
-        `[${currentTrack.metadata.title}](${
-          currentTrack.metadata.url ?? "NaN"
-        })`
-      );
-
-      if (
-        currentTrack.metadata.isYoutubeTrack() &&
-        currentTrack.metadata.info.bestThumbnail.url
-      ) {
-        embed.setThumbnail(currentTrack.metadata.info.bestThumbnail.url);
+    if (!currentTrack) {
+      if (this.lastControlMessage) {
+        await this.lastControlMessage.delete();
+        this.lastControlMessage = undefined;
       }
-
-      const user = currentTrack.metadata.isYoutubeTrack()
-        ? currentTrack.metadata.options?.user
-        : currentTrack.metadata?.user;
-
-      if (user) {
-        embed.addField("Played by", `${user}`);
-      }
-
-      embed.addField(
-        "Next Song",
-        nextTrack
-          ? `[${nextTrack.title}](${nextTrack.url})`
-          : "No upcoming song"
-      );
-    } else {
-      embed.setDescription("music player is currently paused");
+      this.lockUpdate = false;
+      return;
     }
+    const user = currentTrack.metadata.isYoutubeTrack()
+      ? currentTrack.metadata.options?.user
+      : currentTrack.metadata?.user;
+
+    embed.addField(
+      "Now Playing" +
+        (this.size > 2 ? ` (Total: ${this.size} songs queued)` : ""),
+      `[${currentTrack.metadata.title}](${currentTrack.metadata.url ?? "NaN"})${
+        user ? ` by ${user}` : ""
+      }`
+    );
+
+    const progressBaroptions = {
+      size: 15,
+      arrow: "🔘",
+      block: "━",
+    };
+
+    if (currentTrack.metadata.isYoutubeTrack()) {
+      const { size, arrow, block } = progressBaroptions;
+      const timeNow = this.playbackDuration;
+      const timeTotal = this.playbackMilliseconds;
+
+      const progress = Math.round((size * timeNow) / timeTotal);
+      const emptyProgress = size - progress;
+
+      const progressString =
+        block.repeat(progress) + arrow + block.repeat(emptyProgress);
+
+      const bar = (this.isPlaying ? "▶️" : "⏸️") + " " + progressString;
+      const time = `${this.fromMS(timeNow)}/${this.fromMS(timeTotal)}`;
+
+      embed.addField(bar, time);
+    }
+
+    if (
+      currentTrack.metadata.isYoutubeTrack() &&
+      currentTrack.metadata.info.bestThumbnail.url
+    ) {
+      embed.setThumbnail(currentTrack.metadata.info.bestThumbnail.url);
+    }
+
+    embed.addField(
+      "Next Song",
+      nextTrack ? `[${nextTrack.title}](${nextTrack.url})` : "No upcoming song"
+    );
 
     const pMsg = {
       content: options?.text,

@@ -1,10 +1,8 @@
 import {
   ArgsOf,
-  Bot,
   ButtonComponent,
   Client,
   Discord,
-  Guard,
   On,
   Slash,
   SlashGroup,
@@ -87,10 +85,28 @@ export class music {
     interaction: CommandInteraction,
     client: Client
   ): MyQueue | undefined {
-    if (!interaction.guild || !interaction.channel) {
+    if (
+      !interaction.guild ||
+      !interaction.channel ||
+      !(interaction.member instanceof GuildMember)
+    ) {
+      interaction.reply(
+        "> Your request could not be processed, please try again later"
+      );
       return;
     }
+
     const queue = this.player.getQueue(interaction.guild, interaction.channel);
+
+    if (interaction.member.voice.channelId !== queue.voiceChannelId) {
+      interaction.reply(
+        "> To use the controls, you need to join the bot voice channel"
+      );
+
+      setTimeout(() => interaction.deleteReply(), 15e3);
+      return;
+    }
+
     return queue;
   }
 
@@ -191,8 +207,16 @@ export class music {
     interaction: CommandInteraction,
     client: Client
   ): Promise<MyQueue | undefined> {
-    if (!interaction.guild || !interaction.channel) {
-      interaction.reply("> could not process your request");
+    if (
+      !interaction.guild ||
+      !interaction.channel ||
+      !(interaction.member instanceof GuildMember)
+    ) {
+      interaction.reply(
+        "> Your request could not be processed, please try again later"
+      );
+
+      setTimeout(() => interaction.deleteReply(), 15e3);
       return;
     }
 
@@ -201,15 +225,19 @@ export class music {
       !interaction.member.voice.channel
     ) {
       interaction.reply("> You are not in the voice channel");
+
+      setTimeout(() => interaction.deleteReply(), 15e3);
       return;
     }
 
     await interaction.deferReply();
     const queue = this.player.getQueue(interaction.guild, interaction.channel);
+
     if (!queue.isReady) {
       queue.channel = interaction.channel;
       await queue.join(interaction.member.voice.channel);
     }
+
     return queue;
   }
 
@@ -290,24 +318,34 @@ export class music {
       !(interaction.member instanceof GuildMember) ||
       !interaction.channel
     ) {
-      interaction.reply("> could not process your reuqest");
+      interaction.reply(
+        "> Your request could not be processed, please try again later"
+      );
+
+      setTimeout(() => interaction.deleteReply(), 15e3);
       return;
     }
 
     if (!interaction.member.voice.channel) {
-      interaction.reply("> You are not in the voice channel");
+      interaction.reply(
+        "> To use the music commands, you need to join voice channel"
+      );
+
+      setTimeout(() => interaction.deleteReply(), 15e3);
       return;
     }
 
     const queue = this.player.getQueue(interaction.guild, interaction.channel);
 
-    if (!queue.isReady) {
-      interaction.reply("> I'm not ready yet");
-      return;
-    }
+    if (
+      !queue.isReady ||
+      interaction.member.voice.channel.id !== queue.voiceChannelId
+    ) {
+      interaction.reply(
+        "> To use the music commands, you need to join the bot voice channel"
+      );
 
-    if (interaction.member.voice.channel.id !== queue.voiceChannelId) {
-      interaction.reply("> you are not in my voice channel");
+      setTimeout(() => interaction.deleteReply(), 15e3);
       return;
     }
 
