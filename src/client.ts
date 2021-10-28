@@ -4,14 +4,14 @@ import { Intents, Interaction, Message } from "discord.js";
 import { Client } from "discordx";
 
 const client = new Client({
-  prefix: "!",
+  simpleCommand: { prefix: "!" },
   intents: [
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILD_VOICE_STATES,
   ],
-  classes: [path.join(__dirname, "music", "**/*.cmd.{ts,js}")],
+  classes: [path.join(__dirname, "commands", "**/*.cmd.{ts,js}")],
   botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
   silent: true,
 });

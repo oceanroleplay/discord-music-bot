@@ -1,6 +1,6 @@
 {
   "name": "discord-music-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Example of music bot with discordx",
   "main": "build/client.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "discord",
     "typescript"
   ],
-  "author": "Indian Ocean Roleplay (indianoceanroleplay@gmail.com)",
+  "author": "Harry <indianoceanroleplay@gmail.com> [https://github.com/oceanroleplay]",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oceanroleplay/discord-music-bot/issues"
@@ -32,13 +32,10 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.6.0",
-    "@discordx/utilities": "^1.4.3",
+    "@discordx/music": "^1.2.4",
+    "@discordx/utilities": "^2.1.1",
     "discord.js": "^13.2.0",
-    "discordx": "^6.2.0",
-    "reflect-metadata": "^0.1.13",
-    "tweetnacl": "^1.0.3",
-    "youtube-dl-exec": "^1.3.2",
-    "ytpl": "^2.2.3",
-    "ytsr": "^3.5.3"
+    "discordx": "^7.1.0",
+    "reflect-metadata": "^0.1.13"
   }
 }
