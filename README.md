@@ -2,6 +2,10 @@
 
 Example of music bot with [discordx](https://www.npmjs.com/package/discordx)
 
+![screenshot](./src/images/1.jpg)
+
+![screenshot](./src/images/2.jpg)
+
 # Installation
 
 - `git clone https://github.com/oceanroleplay/discord-music-bot`
