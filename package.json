@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.6.0",
-    "@discordx/music": "^1.2.4",
+    "@discordx/music": "^1.2.5",
     "@discordx/utilities": "^2.1.1",
     "discord.js": "^13.2.0",
     "discordx": "^7.1.0",
