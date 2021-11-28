@@ -40,17 +40,17 @@ export class MyQueue extends Queue {
     // empty constructor
   }
 
-  fromMS(duration: number): string {
-    const seconds = Math.floor((duration / 1000) % 60);
-    const minutes = Math.floor((duration / 60000) % 60);
-    const hours = Math.floor(duration / 3600000);
+  public fromMS(duration: number): string {
+    const seconds = Math.floor((duration / 1e3) % 60);
+    const minutes = Math.floor((duration / 6e4) % 60);
+    const hours = Math.floor(duration / 36e5);
     const secondsPad = `${seconds}`.padStart(2, "0");
     const minutesPad = `${minutes}`.padStart(2, "0");
     const hoursPad = `${hours}`.padStart(2, "0");
     return `${hours ? `${hoursPad}:` : ""}${minutesPad}:${secondsPad}`;
   }
 
-  toMS(duration: string): number {
+  public toMS(duration: string): number {
     const milliseconds =
       duration
         .split(":")
@@ -58,12 +58,12 @@ export class MyQueue extends Queue {
           (prev, curr, i, arr) =>
             prev + parseInt(curr) * Math.pow(60, arr.length - 1 - i),
           0
-        ) * 1000;
+        ) * 1e3;
 
     return milliseconds ? milliseconds : 0;
   }
 
-  controlsRow(): MessageActionRow[] {
+  private controlsRow(): MessageActionRow[] {
     const nextButton = new MessageButton()
       .setLabel("Next")
       .setEmoji("⏭")
@@ -72,7 +72,7 @@ export class MyQueue extends Queue {
       .setCustomId("btn-next");
     const pauseButton = new MessageButton()
       .setLabel(this.isPlaying ? "Pause" : "Resume")
-      .setEmoji("⏯")
+      .setEmoji(this.isPlaying ? "⏸️" : "▶️")
       .setStyle("PRIMARY")
       .setCustomId("btn-pause");
     const stopButton = new MessageButton()
@@ -83,14 +83,21 @@ export class MyQueue extends Queue {
       .setLabel("Repeat")
       .setEmoji("🔂")
       .setDisabled(!this.isPlaying)
-      .setStyle("PRIMARY")
+      .setStyle(this.repeat ? "DANGER" : "PRIMARY")
       .setCustomId("btn-repeat");
+    const loopButton = new MessageButton()
+      .setLabel("Loop")
+      .setEmoji("🔁")
+      .setDisabled(!this.isPlaying)
+      .setStyle(this.loop ? "DANGER" : "PRIMARY")
+      .setCustomId("btn-loop");
 
     const row1 = new MessageActionRow().addComponents(
       stopButton,
       pauseButton,
       nextButton,
-      repeatButton
+      repeatButton,
+      loopButton
     );
 
     const queueButton = new MessageButton()
@@ -144,7 +151,7 @@ export class MyQueue extends Queue {
 
     embed.addField(
       "Now Playing" +
-        (this.size > 2 ? ` (Total: ${this.size} songs queued)` : ""),
+        (this.size > 2 ? ` (Total: ${this.size} tracks queued)` : ""),
       `[${currentTrack.metadata.title}](${currentTrack.metadata.url ?? "NaN"})${
         user ? ` by ${user}` : ""
       }`
@@ -168,7 +175,11 @@ export class MyQueue extends Queue {
         block.repeat(progress) + arrow + block.repeat(emptyProgress);
 
       const bar = (this.isPlaying ? "▶️" : "⏸️") + " " + progressString;
-      const time = `${this.fromMS(timeNow)}/${this.fromMS(timeTotal)}`;
+      const currentTime = this.fromMS(timeNow);
+      const endTime = this.fromMS(timeTotal);
+      const spacing = bar.length - currentTime.length - endTime.length;
+      const time =
+        "`" + currentTime + " ".repeat(spacing * 3 - 2) + endTime + "`";
 
       embed.addField(bar, time);
     }
@@ -216,7 +227,7 @@ export class MyQueue extends Queue {
     this.lockUpdate = false;
   }
 
-  async view(
+  public async view(
     interaction: Message | CommandInteraction | ContextMenuInteraction,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     client: Client
@@ -238,7 +249,7 @@ export class MyQueue extends Queue {
         `> Playing **${currentTrack.metadata.title}**`
       );
       if (pMsg instanceof Message) {
-        setTimeout(() => pMsg.delete(), 10_000);
+        setTimeout(() => pMsg.delete(), 1e4);
       }
       return;
     }
@@ -258,7 +269,13 @@ export class MyQueue extends Queue {
       const queue = this.tracks
         .slice(currentPage * 10, currentPage * 10 + 10)
         .map(
-          (track, sindex) => `${currentPage * 10 + sindex + 1}. ${track.title}`
+          (track, sindex) =>
+            `${currentPage * 10 + sindex + 1}. ${track.title}` +
+            `${
+              track.isYoutubeTrack() && track.info.duration
+                ? ` (${track.info.duration})`
+                : ""
+            }`
         )
         .join("\n\n");
 
@@ -266,7 +283,8 @@ export class MyQueue extends Queue {
     }, Math.round(this.size / 10));
 
     await new Pagination(interaction, pageOptions, {
-      onPaginationTimeout: (index, message) => {
+      enableExit: true,
+      onTimeout: (index, message) => {
         if (message.deletable) {
           message.delete();
         }
@@ -286,10 +304,7 @@ export class MyPlayer extends Player {
     });
 
     this.on<MyQueue, "onFinishPlayback">("onFinishPlayback", ([queue]) => {
-      queue.updateControlMessage({
-        force: true,
-        text: "All songs have been played",
-      });
+      queue.leave();
     });
 
     this.on<MyQueue, "onPause">("onPause", ([queue]) => {
@@ -350,15 +365,9 @@ export class MyPlayer extends Player {
     this.on<MyQueue, "onVolumeUpdate">("onVolumeUpdate", ([queue]) => {
       queue.updateControlMessage();
     });
-
-    this.on<MyQueue, "onLeave">("onLeave", ([queue]) => {
-      setTimeout(() => {
-        queue.updateControlMessage();
-      }, 5e3);
-    });
   }
 
   getQueue(guild: Guild, channel?: TextBasedChannels): MyQueue {
-    return super.queue<MyQueue>(guild, new MyQueue(this, guild, channel));
+    return super.queue<MyQueue>(guild, () => new MyQueue(this, guild, channel));
   }
 }
