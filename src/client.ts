@@ -12,7 +12,6 @@ const client = new Client({
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILD_VOICE_STATES,
   ],
-  classes: [path.join(__dirname, "commands", "**/*.cmd.{ts,js}")],
   botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
   silent: true,
 });
