@@ -18,4 +18,10 @@ Example of music bot with [discordx](https://www.npmjs.com/package/discordx)
 
 - `npm run start`
 
+# ☎️ Need help?
+
+Ask in **[discord server](https://discord.gg/yHQY9fexH9)** or open a **[issue](https://github.com/oceanroleplay/discord-music-bot/issues)**
+
 # Thank you
+
+Show your support for [discordx](https://www.npmjs.com/package/discordx) by giving us a star on [github](https://github.com/oceanroleplay/discord.ts).
