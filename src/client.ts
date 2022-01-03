@@ -13,7 +13,6 @@ const client = new Client({
     Intents.FLAGS.GUILD_VOICE_STATES,
   ],
   botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
-  silent: true,
 });
 
 client.once("ready", async () => {

@@ -7,9 +7,9 @@ import {
   MessageActionRow,
   MessageButton,
   MessageEmbed,
-  TextBasedChannels,
+  TextBasedChannel,
 } from "discord.js";
-import { Pagination, PaginationResolver } from "@discordx/utilities";
+import { Pagination, PaginationResolver } from "@discordx/pagination";
 import { Player, Queue } from "@discordx/music";
 
 export class MyQueue extends Queue {
@@ -30,11 +30,7 @@ export class MyQueue extends Queue {
     return this.toMS(track.metadata.info.duration);
   }
 
-  constructor(
-    player: Player,
-    guild: Guild,
-    public channel?: TextBasedChannels
-  ) {
+  constructor(player: Player, guild: Guild, public channel?: TextBasedChannel) {
     super(player, guild);
     setInterval(() => this.updateControlMessage(), 1e4);
     // empty constructor
@@ -367,7 +363,7 @@ export class MyPlayer extends Player {
     });
   }
 
-  getQueue(guild: Guild, channel?: TextBasedChannels): MyQueue {
+  getQueue(guild: Guild, channel?: TextBasedChannel): MyQueue {
     return super.queue<MyQueue>(guild, () => new MyQueue(this, guild, channel));
   }
 }
