@@ -28,6 +28,7 @@
   "homepage": "https://github.com/oceanroleplay/discord-music-bot#readme",
   "devDependencies": {
     "prettier": "^2.5.1",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   },
   "dependencies": {
