@@ -1,8 +1,7 @@
 import "reflect-metadata";
-import path from "path";
 import { Intents, Interaction, Message } from "discord.js";
 import { Client } from "discordx";
-import { importx } from "@discordx/importer";
+import { dirname, importx } from "@discordx/importer";
 
 const client = new Client({
   simpleCommand: { prefix: "!" },
@@ -33,6 +32,14 @@ client.on("messageCreate", (message: Message) => {
   client.executeCommand(message);
 });
 
-importx(path.join(__dirname, "commands", "**/*.cmd.{ts,js}")).then(() => {
-  client.login(process.env.BOT_TOKEN ?? ""); // provide your bot token
-});
+async function start() {
+  await importx(dirname(import.meta.url) + "/{commands}/**/*.{ts,js}");
+
+  // let's start the bot
+  if (!process.env.BOT_TOKEN) {
+    throw Error("Could not find BOT_TOKEN in your environment");
+  }
+  await client.login(process.env.BOT_TOKEN); // provide your bot token
+}
+
+start();

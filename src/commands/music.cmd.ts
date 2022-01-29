@@ -14,7 +14,7 @@ import {
   GuildMember,
   MessageEmbed,
 } from "discord.js";
-import { MyPlayer, MyQueue } from "./music";
+import { MyPlayer, MyQueue } from "./music.js";
 
 @Discord()
 @SlashGroup("music")
