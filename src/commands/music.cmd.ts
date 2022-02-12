@@ -1,20 +1,16 @@
+import type { ArgsOf, Client } from "discordx";
 import {
-  ArgsOf,
   ButtonComponent,
-  Client,
   Discord,
   On,
   Slash,
   SlashGroup,
   SlashOption,
 } from "discordx";
-import {
-  CommandInteraction,
-  Guild,
-  GuildMember,
-  MessageEmbed,
-} from "discord.js";
-import { MyPlayer, MyQueue } from "./music.js";
+import type { CommandInteraction, Guild } from "discord.js";
+import { GuildMember, MessageEmbed } from "discord.js";
+import type { MyQueue } from "./music.js";
+import { MyPlayer } from "./music.js";
 
 @Discord()
 @SlashGroup("music")

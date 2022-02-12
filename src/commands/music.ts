@@ -1,13 +1,15 @@
-import {
+import type {
   Client,
   CommandInteraction,
   ContextMenuInteraction,
   Guild,
+  TextBasedChannel,
+} from "discord.js";
+import {
   Message,
   MessageActionRow,
   MessageButton,
   MessageEmbed,
-  TextBasedChannel,
 } from "discord.js";
 import { Pagination, PaginationResolver } from "@discordx/pagination";
 import { Player, Queue } from "@discordx/music";

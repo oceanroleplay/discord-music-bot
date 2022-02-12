@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import { Intents, Interaction, Message } from "discord.js";
+import type { Interaction, Message } from "discord.js";
+import { Intents } from "discord.js";
 import { Client } from "discordx";
 import { dirname, importx } from "@discordx/importer";
 
@@ -33,7 +34,7 @@ client.on("messageCreate", (message: Message) => {
 });
 
 async function start() {
-  await importx(dirname(import.meta.url) + "/{commands}/**/*.{ts,js}");
+  await importx(dirname(import.meta.url) + "/commands/**/*.{ts,js}");
 
   // let's start the bot
   if (!process.env.BOT_TOKEN) {
