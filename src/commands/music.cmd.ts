@@ -13,7 +13,10 @@ import type { MyQueue } from "./music.js";
 import { MyPlayer } from "./music.js";
 
 @Discord()
+// Create music group
 @SlashGroup({ name: "music" })
+// Assign all slashes to music group
+@SlashGroup("music")
 export class music {
   player;
 
@@ -238,7 +241,6 @@ export class music {
   }
 
   @Slash("play", { description: "Play a song" })
-  @SlashGroup({ name: "music" })
   async play(
     @SlashOption("song", { description: "song name" })
     songName: string,
@@ -261,7 +263,6 @@ export class music {
   }
 
   @Slash("playlist", { description: "Play a playlist" })
-  @SlashGroup({ name: "music" })
   async playlist(
     @SlashOption("playlist", { description: "playlist name" })
     playlistName: string,
@@ -286,7 +287,6 @@ export class music {
   }
 
   @Slash("spotify", { description: "Play a spotify link" })
-  @SlashGroup({ name: "music" })
   async spotify(
     @SlashOption("link", { description: "spotify link" })
     link: string,
@@ -352,7 +352,6 @@ export class music {
   }
 
   @Slash("skip", { description: "skip track" })
-  @SlashGroup({ name: "music" })
   skip(interaction: CommandInteraction, client: Client): void {
     const validate = this.validateInteraction(interaction, client);
     if (!validate) {
@@ -366,7 +365,6 @@ export class music {
   }
 
   @Slash("mix", { description: "mix tracks" })
-  @SlashGroup({ name: "music" })
   mix(interaction: CommandInteraction, client: Client): void {
     const validate = this.validateInteraction(interaction, client);
     if (!validate) {
@@ -380,7 +378,6 @@ export class music {
   }
 
   @Slash("pause", { description: "pause music" })
-  @SlashGroup({ name: "music" })
   pause(interaction: CommandInteraction, client: Client): void {
     const validate = this.validateInteraction(interaction, client);
     if (!validate) {
@@ -399,7 +396,6 @@ export class music {
   }
 
   @Slash("resume", { description: "resume music" })
-  @SlashGroup({ name: "music" })
   resume(interaction: CommandInteraction, client: Client): void {
     const validate = this.validateInteraction(interaction, client);
     if (!validate) {
@@ -418,7 +414,6 @@ export class music {
   }
 
   @Slash("seek", { description: "seek music" })
-  @SlashGroup({ name: "music" })
   seek(
     @SlashOption("time", {
       description: "seek time in seconds",
@@ -448,7 +443,6 @@ export class music {
   }
 
   @Slash("leave", { description: "stop music" })
-  @SlashGroup({ name: "music" })
   leave(interaction: CommandInteraction, client: Client): void {
     const validate = this.validateInteraction(interaction, client);
     if (!validate) {
