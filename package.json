@@ -41,7 +41,7 @@
     "@discordx/music": "^3.1.9",
     "@discordx/pagination": "^1.2.0",
     "discord.js": "^13.6.0",
-    "discordx": "^9.2.7",
+    "discordx": "^9.3.1",
     "ffmpeg-static": "^4.4.1",
     "libsodium-wrappers": "^0.7.9",
     "reflect-metadata": "^0.1.13"

@@ -155,14 +155,14 @@ export class MyQueue extends Queue {
       }`
     );
 
-    const progressBaroptions = {
+    const progressBarOptions = {
       size: 15,
       arrow: "🔘",
       block: "━",
     };
 
     if (currentTrack.metadata.isYoutubeTrack()) {
-      const { size, arrow, block } = progressBaroptions;
+      const { size, arrow, block } = progressBarOptions;
       const timeNow = this.playbackDuration;
       const timeTotal = this.playbackMilliseconds;
 
@@ -267,8 +267,8 @@ export class MyQueue extends Queue {
       const queue = this.tracks
         .slice(currentPage * 10, currentPage * 10 + 10)
         .map(
-          (track, sindex) =>
-            `${currentPage * 10 + sindex + 1}. ${track.title}` +
+          (track, index1) =>
+            `${currentPage * 10 + index1 + 1}. ${track.title}` +
             `${
               track.isYoutubeTrack() && track.info.duration
                 ? ` (${track.info.duration})`
