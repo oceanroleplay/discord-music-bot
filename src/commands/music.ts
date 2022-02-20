@@ -11,7 +11,11 @@ import {
   MessageButton,
   MessageEmbed,
 } from "discord.js";
-import { Pagination, PaginationResolver } from "@discordx/pagination";
+import {
+  Pagination,
+  PaginationResolver,
+  PaginationType,
+} from "@discordx/pagination";
 import { Player, Queue } from "@discordx/music";
 
 export class MyQueue extends Queue {
@@ -287,7 +291,10 @@ export class MyQueue extends Queue {
           message.delete();
         }
       },
-      type: Math.round(this.size / 10) <= 5 ? "BUTTON" : "SELECT_MENU",
+      type:
+        Math.round(this.size / 10) <= 5
+          ? PaginationType.Button
+          : PaginationType.SelectMenu,
       time: 6e4,
     }).send();
   }
