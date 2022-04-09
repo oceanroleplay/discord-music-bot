@@ -2,6 +2,8 @@
 
 ## Contact Details
 
+GitHub: https://github.com/oceanroleplay
+
 Email: indianoceanroleplay@gmail.com
 
 Discord: Harry#5791
