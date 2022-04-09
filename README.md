@@ -1,3 +1,6 @@
+# ⚠️ Moved to [discordx-templates](https://github.com/oceanroleplay/discordx-templates/tree/main/4-music-player-ytdl)
+___
+
 # Discord Music Bot
 
 Example of music bot with [discordx](https://www.npmjs.com/package/discordx)
