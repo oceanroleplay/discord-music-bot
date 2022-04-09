@@ -1,4 +1,12 @@
 # ⚠️ Moved to [discordx-templates](https://github.com/oceanroleplay/discordx-templates/tree/main/4-music-player-ytdl)
+
+## Contact Details
+
+Email: indianoceanroleplay@gmail.com
+
+Discord: Harry#5791
+
+Discord Server: https://discord-ts.js.org/discord
 ___
 
 # Discord Music Bot
